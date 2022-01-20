@@ -6,13 +6,7 @@
 //
 
 import UIKit
-
-#warning("""
-The initial viewcontroller should show the shopping basket.
-It should contain a 'Plus' button for adding new items to the basket.
-It should contain a 'Clear' button for removing all items in the basket.
-""")
-
+import CoreData
 
 class MainController: UIViewController, UITableViewDelegate, UITableViewDataSource, ProductTableViewCellDelegate {
 
@@ -35,7 +29,8 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @IBAction func deleteButtonPressed(_ sender: Any) {
-        
+        Cart.shared.emptyCart()
+        shoppingList = Cart.shared.products
     }
     
     // MARK: - Local Variables
@@ -44,8 +39,18 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         didSet {
             productsTableView.reloadData()
             productsTableViewheightconstraint.constant = productsTableView.contentSize.height
-            shoppingBasketTableView.reloadData()
             self.view.layoutIfNeeded()
+        }
+    }
+    
+    private var shoppingList: [NSManagedObject] = [] {
+        didSet {
+            shoppingBasketTableView.reloadData()
+            if shoppingBasketTableViewHeightConstraint.constant != 0 {
+                shoppingBasketTableViewHeightConstraint.constant = shoppingBasketTableView.contentSize.height
+                self.view.layoutIfNeeded()
+            }
+            totalLabel.text = "Total \(Cart.shared.total)$"
         }
     }
     
@@ -65,6 +70,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - Setup View Methods
     
     private func setupShoppingBasketTableView() {
+        shoppingList = Cart.shared.fetchItems()
         shoppingBasketTableView.delegate = self
         shoppingBasketTableView.dataSource = self
         shoppingBasketTableView.rowHeight = 120
@@ -84,7 +90,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     private func animateShoppingBasketList(shouldShow: Bool) {
         shoppingBasketTableViewHeightConstraint.constant = shouldShow ? self.shoppingBasketTableView.contentSize.height : 0
-        UIView.animate(withDuration: 0.75, delay: 0, options: .curveEaseIn) {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
             self.view.layoutIfNeeded()
         }
     }
@@ -92,17 +98,33 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - TableView Methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return products.count
+        switch tableView {
+        case productsTableView:
+            return products.count
+        case shoppingBasketTableView:
+            return shoppingList.count
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ProductTableViewCell", for: indexPath) as? ProductTableViewCell {
             cell.delegate = self
-            cell.setupPrductCell(name: products[indexPath.row].name, price: products[indexPath.row].retailPrice, image: products[indexPath.row].imageURL)
             switch tableView {
             case productsTableView:
+                cell.setupProductCell(
+                    name: products[indexPath.row].name,
+                    price: products[indexPath.row].retailPrice,
+                    image: products[indexPath.row].imageURL,
+                    indexPath: indexPath)
                 cell.addButton.isHidden = false
             case shoppingBasketTableView:
+                cell.setupProductCell(
+                    name: shoppingList[indexPath.row].value(forKey: "name") as! String,
+                    price: shoppingList[indexPath.row].value(forKey: "retail_price") as! Int,
+                    image: shoppingList[indexPath.row].value(forKey: "image_url") as! String,
+                    indexPath: indexPath)
                 cell.addButton.isHidden = true
             default:
                 break
@@ -113,21 +135,34 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "GoToDetails", sender: products[indexPath.row])
+        switch tableView {
+        case productsTableView:
+            self.performSegue(withIdentifier: "GoToDetails", sender: products[indexPath.row])
+        case shoppingBasketTableView:
+            self.performSegue(withIdentifier: "GoToDetails", sender: shoppingList[indexPath.row])
+        default:
+            break
+        }
     }
     
     // MARK: - Delegate Methods
     
-    func addProduct() {
-        // TODO: - Add Logic
+    func addProduct(indexPath: IndexPath?) {
+        guard let indexPath = indexPath else { return }
+        Cart.shared.addItem(product: products[indexPath.row])
+        shoppingList = Cart.shared.products
     }
     
     // MARK: - Navigation Methods
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "GoToDetails" {
-            if let product = sender as? Product, let detailsVC = segue.destination as? DetailController {
-                detailsVC.product = product
+            if let detailsVC = segue.destination as? DetailController {
+                if let product = sender as? Product {
+                    detailsVC.product = product
+                } else if let shoppingItem = sender as? NSManagedObject {
+                    detailsVC.shoppingItem = shoppingItem
+                }
             }
         }
     }

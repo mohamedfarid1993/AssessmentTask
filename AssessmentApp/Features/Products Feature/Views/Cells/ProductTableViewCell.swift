@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 protocol ProductTableViewCellDelegate: AnyObject {
-    func addProduct()
+    func addProduct(indexPath: IndexPath?)
 }
 
 class ProductTableViewCell: UITableViewCell {
@@ -24,12 +24,13 @@ class ProductTableViewCell: UITableViewCell {
     // MARK: - IBActions
     
     @IBAction func addPressed(_ sender: Any) {
-        delegate?.addProduct()
+        delegate?.addProduct(indexPath: indexPath)
     }
     
     // MARK: - Local Variables
     
     weak var delegate: ProductTableViewCellDelegate?
+    private var indexPath: IndexPath?
     
     // MARK: - View Methods
 
@@ -41,9 +42,10 @@ class ProductTableViewCell: UITableViewCell {
     
     // MARK: - Setup View Methods
     
-    func setupPrductCell(name: String, price: Int, image: String) {
+    func setupProductCell(name: String, price: Int, image: String, indexPath: IndexPath) {
         nameLabel.text = name
         priceLabel.text = "\(price)$"
         productImage.kf.setImage(with: URL(string: image))
+        self.indexPath = indexPath
     }
 }
