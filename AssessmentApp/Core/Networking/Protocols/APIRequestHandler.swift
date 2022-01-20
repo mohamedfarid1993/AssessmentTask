@@ -22,8 +22,6 @@ extension APIRequestHandler where Self: URLRequestBuilder {
         if NetworkReachabilityManager()?.isReachable ?? false {
             NetworkManager.manager.request(self).responseData { response in
                 self.handleResponse(response, completion: completion)
-            }.responseString { response in
-                print(response)
             }
         } else {
             completion?(ServerResponse.failure(ResponseError.offline))
