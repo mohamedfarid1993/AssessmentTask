@@ -33,6 +33,8 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    private let repositry = ProductRepositry()
+    
     // MARK: - View Methods
     
     override func viewDidLoad() {
@@ -91,20 +93,13 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - Networking Methods
     
     private func fetchProducts() {
-        ProductsRequest.getProducts.send(ProductResponse.self) { [weak self] response in
-            switch response {
-            case .success(let result):
-                DispatchQueue.main.async {
-                    var products: [Product] = []
-                    result.values.forEach { value in
-                        products.append(value)
-                    }
-                    self?.products = products
-                }
-            case .failure(let error):
+        repositry.get { [weak self] products, error in
+            if let error = error {
                 self?.showRetryAlert(with: error.localizedDescription, title: "Error", handler: { alert in
                     self?.fetchProducts()
                 })
+            } else {
+                self?.products = products ?? []
             }
         }
     }
