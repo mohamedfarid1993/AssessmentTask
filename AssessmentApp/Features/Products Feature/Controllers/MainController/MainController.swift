@@ -18,6 +18,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     // MARK: - IBOutlets
     
+    @IBOutlet weak var productsTableViewheightconstraint: NSLayoutConstraint!
     @IBOutlet weak var productsTableView: UITableView!
     
     // MARK: - IBActions
@@ -27,6 +28,8 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private var products: [Product] = [] {
         didSet {
             productsTableView.reloadData()
+            productsTableViewheightconstraint.constant = productsTableView.contentSize.height
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -35,6 +38,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.title = "Home" 
         setupProductsTableView()
         fetchProducts()
     }
