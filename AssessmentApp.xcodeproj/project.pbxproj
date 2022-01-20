@@ -88,6 +88,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		726E65242798B2E600D47C1F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				726E65262798B30700D47C1F /* Views */,
+				726E65252798B2FE00D47C1F /* Controllers */,
+				8EB5CCEE27988A8100396097 /* Models */,
+			);
+			path = Products;
+			sourceTree = "<group>";
+		};
+		726E65252798B2FE00D47C1F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8EB5CCF527988D9C00396097 /* MainController */,
+				8EB5CCF927988DEA00396097 /* DetailController */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		726E65262798B30700D47C1F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8EB5CCBE27988A0700396097 /* Main.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		8EB5CCAC27988A0700396097 = {
 			isa = PBXGroup;
 			children = (
@@ -112,11 +139,8 @@
 			isa = PBXGroup;
 			children = (
 				8EB5CCF827988DB800396097 /* AppDelegate */,
-				8EB5CCEE27988A8100396097 /* Models */,
+				726E65242798B2E600D47C1F /* Products */,
 				8EB5CCEB27988A5900396097 /* DemoData */,
-				8EB5CCF927988DEA00396097 /* DetailController */,
-				8EB5CCF527988D9C00396097 /* MainController */,
-				8EB5CCBE27988A0700396097 /* Main.storyboard */,
 				8EB5CCC427988A0900396097 /* Assets.xcassets */,
 				8EB5CCC627988A0900396097 /* LaunchScreen.storyboard */,
 				8EB5CCC927988A0900396097 /* Info.plist */,
