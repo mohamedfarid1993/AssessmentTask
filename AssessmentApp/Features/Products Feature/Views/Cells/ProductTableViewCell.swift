@@ -16,6 +16,7 @@ class ProductTableViewCell: UITableViewCell {
     
     // MARK: - IBOutlets
     
+    @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var productImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!

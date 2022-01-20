@@ -18,10 +18,25 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     // MARK: - IBOutlets
     
+    @IBOutlet weak var totalLabel: UILabel!
+    @IBOutlet weak var shoppingBasketButton: ShoppingBasketButton!
+    @IBOutlet weak var shoppingBasketTableViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var shoppingBasketTableView: UITableView!
     @IBOutlet weak var productsTableViewheightconstraint: NSLayoutConstraint!
     @IBOutlet weak var productsTableView: UITableView!
     
     // MARK: - IBActions
+    
+    @IBAction func shoppingBasketButtonPressed(_ sender: Any) {
+        if let button = sender as? UIButton {
+            button.isSelected = !button.isSelected
+            animateShoppingBasketList(shouldShow: button.isSelected)
+        }
+    }
+    
+    @IBAction func deleteButtonPressed(_ sender: Any) {
+        
+    }
     
     // MARK: - Local Variables
     
@@ -29,6 +44,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         didSet {
             productsTableView.reloadData()
             productsTableViewheightconstraint.constant = productsTableView.contentSize.height
+            shoppingBasketTableView.reloadData()
             self.view.layoutIfNeeded()
         }
     }
@@ -43,9 +59,20 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.title = "Home"
         setupProductsTableView()
         fetchProducts()
+        setupShoppingBasketTableView()
     }
     
     // MARK: - Setup View Methods
+    
+    private func setupShoppingBasketTableView() {
+        shoppingBasketTableView.delegate = self
+        shoppingBasketTableView.dataSource = self
+        shoppingBasketTableView.rowHeight = 120
+        let productCell = UINib(nibName: "ProductTableViewCell", bundle: nil)
+        shoppingBasketTableView.register(productCell, forCellReuseIdentifier: "ProductTableViewCell")
+        shoppingBasketTableViewHeightConstraint.constant = 0
+        self.view.layoutIfNeeded()
+    }
     
     private func setupProductsTableView() {
         productsTableView.delegate = self
@@ -53,6 +80,13 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         productsTableView.rowHeight = 120
         let productCell = UINib(nibName: "ProductTableViewCell", bundle: nil)
         productsTableView.register(productCell, forCellReuseIdentifier: "ProductTableViewCell")
+    }
+    
+    private func animateShoppingBasketList(shouldShow: Bool) {
+        shoppingBasketTableViewHeightConstraint.constant = shouldShow ? self.shoppingBasketTableView.contentSize.height : 0
+        UIView.animate(withDuration: 0.75, delay: 0, options: .curveEaseIn) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     // MARK: - TableView Methods
@@ -65,6 +99,14 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ProductTableViewCell", for: indexPath) as? ProductTableViewCell {
             cell.delegate = self
             cell.setupPrductCell(name: products[indexPath.row].name, price: products[indexPath.row].retailPrice, image: products[indexPath.row].imageURL)
+            switch tableView {
+            case productsTableView:
+                cell.addButton.isHidden = false
+            case shoppingBasketTableView:
+                cell.addButton.isHidden = true
+            default:
+                break
+            }
             return cell
         }
         return UITableViewCell()

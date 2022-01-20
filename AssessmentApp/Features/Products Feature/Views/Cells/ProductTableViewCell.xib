@@ -70,6 +70,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="addButton" destination="Bie-qG-jmh" id="Dod-WM-M03"/>
                 <outlet property="nameLabel" destination="b8a-xy-buu" id="tvg-rY-d16"/>
                 <outlet property="priceLabel" destination="T3o-BU-ZFq" id="f0I-XM-KNV"/>
                 <outlet property="productImage" destination="hO1-ff-X0h" id="mm9-6e-TTZ"/>
