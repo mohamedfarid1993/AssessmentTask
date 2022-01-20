@@ -26,10 +26,8 @@
 		8EB5CCD327988A0900396097 /* AssessmentAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCD227988A0900396097 /* AssessmentAppTests.swift */; };
 		8EB5CCDD27988A0900396097 /* AssessmentAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCDC27988A0900396097 /* AssessmentAppUITests.swift */; };
 		8EB5CCDF27988A0900396097 /* AssessmentAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCDE27988A0900396097 /* AssessmentAppUITestsLaunchTests.swift */; };
-		8EB5CCED27988A6000396097 /* NetworkServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCEC27988A6000396097 /* NetworkServiceMock.swift */; };
 		8EB5CCF127988A8100396097 /* ShoppingBasket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCEF27988A8100396097 /* ShoppingBasket.swift */; };
 		8EB5CCF227988A8100396097 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCF027988A8100396097 /* Product.swift */; };
-		8EB5CCF427988AE100396097 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCF327988AE100396097 /* DemoData.swift */; };
 		8EB5CCF727988DB000396097 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCF627988DB000396097 /* MainController.swift */; };
 		8EB5CCFB27988DF400396097 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB5CCFA27988DF400396097 /* DetailController.swift */; };
 		ADB73220A504520AA5F04ABD /* Pods_AssessmentApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77F76196D19CA8D8158D9A3D /* Pods_AssessmentApp.framework */; };
@@ -80,10 +78,8 @@
 		8EB5CCD827988A0900396097 /* AssessmentAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AssessmentAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EB5CCDC27988A0900396097 /* AssessmentAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssessmentAppUITests.swift; sourceTree = "<group>"; };
 		8EB5CCDE27988A0900396097 /* AssessmentAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssessmentAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		8EB5CCEC27988A6000396097 /* NetworkServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceMock.swift; sourceTree = "<group>"; };
 		8EB5CCEF27988A8100396097 /* ShoppingBasket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingBasket.swift; sourceTree = "<group>"; };
 		8EB5CCF027988A8100396097 /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
-		8EB5CCF327988AE100396097 /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
 		8EB5CCF627988DB000396097 /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
 		8EB5CCFA27988DF400396097 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		9E5442DF60FB1B1B0EC5D661 /* Pods-AssessmentApp-AssessmentAppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AssessmentApp-AssessmentAppUITests.release.xcconfig"; path = "Target Support Files/Pods-AssessmentApp-AssessmentAppUITests/Pods-AssessmentApp-AssessmentAppUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -240,7 +236,6 @@
 				8EB5CCF827988DB800396097 /* AppDelegate */,
 				726E65392799892200D47C1F /* Features */,
 				726E6527279976B100D47C1F /* Core */,
-				8EB5CCEB27988A5900396097 /* DemoData */,
 				8EB5CCC427988A0900396097 /* Assets.xcassets */,
 				8EB5CCC627988A0900396097 /* LaunchScreen.storyboard */,
 				8EB5CCC927988A0900396097 /* Info.plist */,
@@ -264,15 +259,6 @@
 				8EB5CCDE27988A0900396097 /* AssessmentAppUITestsLaunchTests.swift */,
 			);
 			path = AssessmentAppUITests;
-			sourceTree = "<group>";
-		};
-		8EB5CCEB27988A5900396097 /* DemoData */ = {
-			isa = PBXGroup;
-			children = (
-				8EB5CCEC27988A6000396097 /* NetworkServiceMock.swift */,
-				8EB5CCF327988AE100396097 /* DemoData.swift */,
-			);
-			path = DemoData;
 			sourceTree = "<group>";
 		};
 		8EB5CCEE27988A8100396097 /* Models */ = {
@@ -573,8 +559,6 @@
 			files = (
 				726E652D2799868A00D47C1F /* APIRequestHandler.swift in Sources */,
 				726E653C2799894E00D47C1F /* Constants.swift in Sources */,
-				8EB5CCF427988AE100396097 /* DemoData.swift in Sources */,
-				8EB5CCED27988A6000396097 /* NetworkServiceMock.swift in Sources */,
 				726E65322799873300D47C1F /* ServerResponse.swift in Sources */,
 				726E6530279986EA00D47C1F /* ResponseError.swift in Sources */,
 				726E65342799876A00D47C1F /* HandleAlamofireResponse.swift in Sources */,
