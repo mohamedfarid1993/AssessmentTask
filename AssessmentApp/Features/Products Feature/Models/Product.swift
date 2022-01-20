@@ -5,7 +5,8 @@
 //  Created by Irfan Saeed on 19/01/2022.
 //
 
-import Foundation
+import UIKit
+import CoreData
 
 struct Product: CodableInit {
     
@@ -29,3 +30,18 @@ struct Product: CodableInit {
 }
 
 typealias ProductResponse = [String: Product]
+
+extension Product {
+    func toNSManagedObject() {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "ShoppingBasket", in: context)
+        let object = NSManagedObject(entity: entity!, insertInto: context)
+        object.setValue(self.barcode, forKey: "barcode")
+        object.setValue(self.id, forKey: "id")
+        object.setValue(self.name, forKey: "name")
+        object.setValue(self.imageURL, forKey: "image_url")
+        object.setValue(self.productDescription, forKey: "product_description")
+        object.setValue(self.retailPrice, forKey: "retail_price")
+    }
+}

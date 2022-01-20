@@ -20,7 +20,6 @@ class DetailController: UIViewController {
     // MARK: - Local Variables
     
     var product: Product?
-    var shoppingItem: NSManagedObject?
     
     // MARK: - View Methods
 
@@ -37,11 +36,6 @@ class DetailController: UIViewController {
             priceLabel.text = "\(product.retailPrice)$"
             descriptionLabel.text = product.productDescription
             nameLabel.text = product.name
-        } else if let shoppingItem = shoppingItem {
-            productImageView.kf.setImage(with: URL(string: shoppingItem.value(forKey: "image_url") as! String))
-            priceLabel.text = "\(shoppingItem.value(forKey: "retail_price") as! Int)$"
-            descriptionLabel.text = shoppingItem.value(forKey: "product_description") as? String
-            nameLabel.text = shoppingItem.value(forKey: "name") as? String
         }
     }
 }

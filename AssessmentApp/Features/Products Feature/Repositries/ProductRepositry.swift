@@ -1,5 +1,5 @@
 //
-//  ProductRepositry.swift
+//  ProductRepository.swift
 //  AssessmentApp
 //
 //  Created by Mohamed Farid on 20/01/2022.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct ProductRepositry: Repositry {
+struct ProductRepository: FetchRepository {
     
-    typealias T = [Product]
+    typealias T = Product
     
     func get(completionHandler: @escaping ([Product]?, Error?) -> Void) {
         ProductsRequest.getProducts.send(ProductResponse.self) { response in

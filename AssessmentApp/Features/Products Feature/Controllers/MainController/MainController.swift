@@ -29,8 +29,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @IBAction func deleteButtonPressed(_ sender: Any) {
-        Cart.shared.emptyCart()
-        shoppingList = Cart.shared.products
+        emptyCart()
     }
     
     // MARK: - Local Variables
@@ -43,18 +42,25 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    private var shoppingList: [NSManagedObject] = [] {
+    private var shoppingList: [Product] = [] {
         didSet {
             shoppingBasketTableView.reloadData()
             if shoppingBasketTableViewHeightConstraint.constant != 0 {
                 shoppingBasketTableViewHeightConstraint.constant = shoppingBasketTableView.contentSize.height
                 self.view.layoutIfNeeded()
             }
-            totalLabel.text = "Total \(Cart.shared.total)$"
         }
     }
     
-    private let repositry = ProductRepositry()
+    private var cart: Cart? {
+        didSet {
+            guard let cart = cart else { return }
+            shoppingList = cart.product
+            totalLabel.text = "Total \(cart.total)$"
+        }
+    }
+    
+    private let repository = ProductRepository()
     
     // MARK: - View Methods
     
@@ -70,7 +76,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - Setup View Methods
     
     private func setupShoppingBasketTableView() {
-        shoppingList = Cart.shared.fetchItems()
+        getCart()
         shoppingBasketTableView.delegate = self
         shoppingBasketTableView.dataSource = self
         shoppingBasketTableView.rowHeight = 120
@@ -92,6 +98,42 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         shoppingBasketTableViewHeightConstraint.constant = shouldShow ? self.shoppingBasketTableView.contentSize.height : 0
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
             self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func getCart() {
+        CartManager.shared.get { [weak self] cart, error in
+            if let error = error {
+                self?.showRetryAlert(with: error.localizedDescription, title: "Error", handler: { alert in
+                    self?.getCart()
+                })
+            } else {
+                self?.cart = cart
+            }
+        }
+    }
+    
+    private func emptyCart() {
+        CartManager.shared.delete { [weak self] cart, error in
+            if let error = error {
+                self?.showRetryAlert(with: error.localizedDescription, title: "Error", handler: { alert in
+                    self?.emptyCart()
+                })
+            } else {
+                self?.cart = cart
+            }
+        }
+    }
+    
+    private func updateCart(indexPath: IndexPath) {
+        CartManager.shared.update(product: products[indexPath.row]) { [weak self] cart, error in
+            if let error = error {
+                self?.showRetryAlert(with: error.localizedDescription, title: "Error", handler: { alert in
+                    self?.addProduct(indexPath: indexPath)
+                })
+            } else {
+                self?.cart = cart
+            }
         }
     }
     
@@ -121,9 +163,9 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 cell.addButton.isHidden = false
             case shoppingBasketTableView:
                 cell.setupProductCell(
-                    name: shoppingList[indexPath.row].value(forKey: "name") as! String,
-                    price: shoppingList[indexPath.row].value(forKey: "retail_price") as! Int,
-                    image: shoppingList[indexPath.row].value(forKey: "image_url") as! String,
+                    name: shoppingList[indexPath.row].name,
+                    price: shoppingList[indexPath.row].retailPrice,
+                    image: shoppingList[indexPath.row].imageURL,
                     indexPath: indexPath)
                 cell.addButton.isHidden = true
             default:
@@ -149,8 +191,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func addProduct(indexPath: IndexPath?) {
         guard let indexPath = indexPath else { return }
-        Cart.shared.addItem(product: products[indexPath.row])
-        shoppingList = Cart.shared.products
+        updateCart(indexPath: indexPath)
     }
     
     // MARK: - Navigation Methods
@@ -160,8 +201,6 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if let detailsVC = segue.destination as? DetailController {
                 if let product = sender as? Product {
                     detailsVC.product = product
-                } else if let shoppingItem = sender as? NSManagedObject {
-                    detailsVC.shoppingItem = shoppingItem
                 }
             }
         }
@@ -170,7 +209,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - Networking Methods
     
     private func fetchProducts() {
-        repositry.get { [weak self] products, error in
+        repository.get { [weak self] products, error in
             if let error = error {
                 self?.showRetryAlert(with: error.localizedDescription, title: "Error", handler: { alert in
                     self?.fetchProducts()
