@@ -38,7 +38,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "Home" 
+        self.title = "Home"
         setupProductsTableView()
         fetchProducts()
     }
@@ -69,7 +69,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: - Add Logic
+        self.performSegue(withIdentifier: "GoToDetails", sender: products[indexPath.row])
     }
     
     // MARK: - Delegate Methods
@@ -79,6 +79,14 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     // MARK: - Navigation Methods
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "GoToDetails" {
+            if let product = sender as? Product, let detailsVC = segue.destination as? DetailController {
+                detailsVC.product = product
+            }
+        }
+    }
     
     // MARK: - Networking Methods
     

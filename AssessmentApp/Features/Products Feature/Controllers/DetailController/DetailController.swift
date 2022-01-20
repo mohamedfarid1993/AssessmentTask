@@ -8,22 +8,32 @@
 import UIKit
 
 class DetailController: UIViewController {
+    
+    // MARK: - IBOutlets
+    
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var productImageView: UIImageView!
+    
+    // MARK: - Local Variables
+    
+    var product: Product?
+    
+    // MARK: - View Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        setupView()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func setupView() {
+        guard let product = product else { return }
+        productImageView.kf.setImage(with: URL(string: product.imageURL))
+        self.title = "Product"
+        priceLabel.text = "\(product.retailPrice)$"
+        descriptionLabel.text = product.productDescription
+        nameLabel.text = product.name
     }
-    */
-
 }

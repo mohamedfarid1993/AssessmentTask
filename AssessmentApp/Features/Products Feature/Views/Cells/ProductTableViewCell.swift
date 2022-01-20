@@ -35,6 +35,7 @@ class ProductTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        self.selectionStyle = .none
     }
     
     // MARK: - Setup View Methods
